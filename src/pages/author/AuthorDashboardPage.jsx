@@ -75,7 +75,7 @@ export default function AuthorDashboardPage() {
         </div>
 
         {/* Stats row */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: '1rem', marginBottom: '1.5rem' }}>
+        <div className="dash-stats-row" style={{ marginBottom: "1.5rem" }}>
           {[
             { label: 'Published Books', value: String(DEMO_BOOKS.length), icon: BookOpen },
             { label: 'Total Copies Sold', value: String(totalSales), icon: TrendingUp },
@@ -104,7 +104,7 @@ export default function AuthorDashboardPage() {
               <Shield size={11} /> Read Only — Cannot be edited
             </div>
           </div>
-          <div style={{ overflowX: 'auto' }}>
+          <div className="table-wrap">
             <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '.875rem', minWidth: 480 }}>
               <thead>
                 <tr style={{ background: 'var(--bg)' }}>
@@ -137,7 +137,7 @@ export default function AuthorDashboardPage() {
             <h3 style={{ fontFamily: 'var(--font-serif)', fontWeight: 700, color: 'var(--primary)', fontSize: '1rem', marginBottom: '.15rem' }}>Sales Breakdown</h3>
             <p style={{ fontSize: '.77rem', color: 'var(--muted)' }}>Platform-wise data — Last updated: December 2024</p>
           </div>
-          <div style={{ overflowX: 'auto' }}>
+          <div className="table-wrap">
             <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '.875rem', minWidth: 420 }}>
               <thead>
                 <tr style={{ background: 'var(--bg)' }}>

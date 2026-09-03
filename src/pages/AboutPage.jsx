@@ -76,7 +76,7 @@ function LeadershipContent() {
 function VisionMissionContent() {
   return (
     <div>
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem', marginBottom: '2.5rem' }}>
+      <div className="vision-grid" style={{ marginBottom: "2.5rem" }}>
         <div style={{ padding: '2rem', background: 'linear-gradient(135deg,var(--primary-dark),var(--primary))', borderRadius: 'var(--radius-lg)', color: '#fff' }}>
           <Target size={32} style={{ marginBottom: '.85rem', opacity: .8 }} />
           <h3 style={{ fontFamily: 'var(--font-serif)', fontSize: '1.4rem', fontWeight: 700, marginBottom: '.85rem' }}>Our Vision</h3>
@@ -212,9 +212,9 @@ export default function AboutPage() {
       </div>
 
       <section className="section">
-        <div className="container" style={{ display: 'grid', gridTemplateColumns: '220px 1fr', gap: '2.5rem', alignItems: 'start' }}>
+        <div className="about-layout">
           {/* Sidebar nav */}
-          <nav style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 'var(--radius-lg)', overflow: 'hidden', position: 'sticky', top: 80 }}>
+          <nav className="about-sidebar" style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 'var(--radius-lg)', overflow: 'hidden', position: 'sticky', top: 80 }}>
             {ABOUT_NAV.map(item => (
               <Link key={item.key} to={item.to}
                 style={{

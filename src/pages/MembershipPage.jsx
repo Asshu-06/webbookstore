@@ -30,7 +30,7 @@ export default function MembershipPage() {
           </div>
 
           {/* Category cards */}
-          <div className="grid-4" style={{ marginBottom: '4rem' }}>
+          <div className="membership-cats" style={{ marginBottom: '2.5rem' }}>
             {MEMBERSHIP_CATEGORIES.map((cat, i) => (
               <div key={cat.id} className="card" style={{ borderTop: '4px solid ' + ['var(--accent)', 'var(--primary)', '#4a7c5c', '#7c3060'][i] }}>
                 <div className="card-body">
@@ -83,7 +83,7 @@ export default function MembershipPage() {
                   <label className="form-label">Full Name *</label>
                   <input className="form-input" type="text" required placeholder="Your full name" value={formData.name} onChange={e => setFormData({ ...formData, name: e.target.value })} />
                 </div>
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+                <div className="form-row-2">
                   <div className="form-group">
                     <label className="form-label">Email Address *</label>
                     <input className="form-input" type="email" required placeholder="email@example.com" value={formData.email} onChange={e => setFormData({ ...formData, email: e.target.value })} />

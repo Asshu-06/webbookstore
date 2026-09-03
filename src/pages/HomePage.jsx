@@ -52,7 +52,7 @@ export default function HomePage() {
       {/* ── STATS BAR ────────────────────────────────────── */}
       <section style={{ background: 'var(--surface)', borderBottom: '1px solid var(--border)', padding: '2.25rem 0' }}>
         <div className="container">
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: '1rem' }}>
+          <div className="stats-row">
             {STATS.map(s => (
               <div key={s.label} style={{ textAlign: 'center', padding: '1.25rem .75rem', borderRadius: 'var(--radius-lg)', border: '1px solid var(--border)', background: 'var(--bg)' }}>
                 <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '.6rem' }}>{s.icon}</div>
@@ -72,7 +72,7 @@ export default function HomePage() {
             <h2 className="section-title">Three Pillars of Our Work</h2>
             <div className="accent-bar" />
           </div>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: '1.5rem' }}>
+          <div className="pillars-row">
             {PILLARS.map((p, i) => (
               <div key={i} style={{
                 padding: '2rem 1.75rem',
@@ -100,7 +100,7 @@ export default function HomePage() {
             <div className="accent-bar" />
             <p className="section-subtitle">Our latest programmes, events, and community initiatives</p>
           </div>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: '1.5rem' }}>
+          <div className="activities-grid">
             {recentActivities.map(activity => (
               <div key={activity.id} className="card">
                 <div style={{ height: 188, background: activity.coverColor, position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>

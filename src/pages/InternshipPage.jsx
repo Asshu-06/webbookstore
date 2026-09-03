@@ -29,7 +29,7 @@ export default function InternshipPage() {
             <p className="section-subtitle">Choose from six focused internship tracks designed to develop professional expertise</p>
           </div>
 
-          <div className="grid-3" style={{ marginBottom: '4rem' }}>
+          <div className="internship-grid" style={{ marginBottom: "2.5rem" }}>
             {INTERNSHIP_AREAS.map((area, i) => (
               <div key={area.id} className="card">
                 <div style={{ height: 8, background: ['var(--primary)', 'var(--accent)', '#4a7c5c', '#5a4080', '#7c3060', '#1a5c6e'][i] }} />
@@ -72,7 +72,7 @@ export default function InternshipPage() {
               </div>
             ) : (
               <form onSubmit={handleSubmit}>
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+                <div className="form-row-2">
                   <div className="form-group">
                     <label className="form-label">Full Name *</label>
                     <input className="form-input" type="text" required placeholder="Your name" value={form.name} onChange={e => setForm({...form, name: e.target.value})} />
@@ -82,7 +82,7 @@ export default function InternshipPage() {
                     <input className="form-input" type="email" required placeholder="email@example.com" value={form.email} onChange={e => setForm({...form, email: e.target.value})} />
                   </div>
                 </div>
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+                <div className="form-row-2">
                   <div className="form-group">
                     <label className="form-label">Phone</label>
                     <input className="form-input" type="tel" placeholder="+91 98765 43210" value={form.phone} onChange={e => setForm({...form, phone: e.target.value})} />

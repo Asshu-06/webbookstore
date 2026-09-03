@@ -41,7 +41,7 @@ export default function ContactPage() {
 
       <section className="section">
         <div className="container">
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.6fr', gap: '3rem', alignItems: 'start' }}>
+          <div className="contact-layout">
             {/* Contact Info */}
             <div>
               <h2 style={{ fontFamily: 'var(--font-serif)', fontWeight: 700, color: 'var(--primary)', marginBottom: '1.5rem', fontSize: '1.5rem' }}>Our Office</h2>
@@ -81,7 +81,7 @@ export default function ContactPage() {
                 </div>
               ) : (
                 <form onSubmit={handleSubmit}>
-                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+                  <div className="form-row-2">
                     <div className="form-group">
                       <label className="form-label">Full Name *</label>
                       <input className="form-input" type="text" required placeholder="Your name" value={form.name} onChange={e => setForm({...form, name: e.target.value})} />

@@ -42,7 +42,7 @@ export default function BooksPage() {
 
           <p style={{ color: 'var(--text-muted)', fontSize: '.875rem', marginBottom: '1.5rem' }}>{filtered.length} books found</p>
 
-          <div className="grid-3">
+          <div className="books-grid">
             {filtered.map(book => (
               <div key={book.id} className="card">
                 {/* Book cover */}

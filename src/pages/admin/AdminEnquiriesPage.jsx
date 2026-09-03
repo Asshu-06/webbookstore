@@ -61,7 +61,7 @@ export default function AdminEnquiriesPage() {
       <div style={{ display: 'grid', gridTemplateColumns: selectedEnquiry ? '1fr 380px' : '1fr', gap: '1.5rem' }}>
         {/* Table */}
         <div style={{ background: '#fff', borderRadius: 'var(--radius-lg)', border: '1px solid var(--border)', overflow: 'hidden' }}>
-          <div style={{ overflowX: 'auto' }}>
+          <div className="table-wrap">
             <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '.875rem' }}>
               <thead>
                 <tr style={{ background: 'var(--bg-off)' }}>

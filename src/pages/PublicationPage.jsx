@@ -54,7 +54,7 @@ export default function PublicationPage() {
                 <BookOpen size={16} /> Browse Our Books
               </Link>
             </div>
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+            <div className="form-row-2">
               {[
                 { n: '150+', l: 'Books Published' }, { n: '20+', l: 'Languages' },
                 { n: '200+', l: 'Authors', }, { n: '12 yrs', l: 'of Publishing' },
@@ -77,7 +77,7 @@ export default function PublicationPage() {
             <h2 className="section-title" style={{ marginTop: '.75rem' }}>Publication Process</h2>
             <div className="accent-bar" />
           </div>
-          <div className="grid-3">
+          <div className="process-grid">
             {PROCESS_STEPS.map(step => (
               <div key={step.num} style={{ padding: '1.75rem', background: '#fff', borderRadius: 'var(--radius-lg)', border: '1px solid var(--border)', boxShadow: 'var(--shadow-sm)' }}>
                 <div style={{ fontFamily: 'var(--font-serif)', fontSize: '2.5rem', fontWeight: 700, color: 'rgba(26,60,94,.12)', marginBottom: '.75rem', lineHeight: 1 }}>{step.num}</div>
@@ -145,11 +145,11 @@ export default function PublicationPage() {
               </div>
             ) : (
               <form onSubmit={e => { e.preventDefault(); setSubmitted(true); }}>
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+                <div className="form-row-2">
                   <div className="form-group"><label className="form-label">Author Name *</label><input className="form-input" required placeholder="Your full name" value={form.name} onChange={e => setForm({...form, name: e.target.value})} /></div>
                   <div className="form-group"><label className="form-label">Email *</label><input className="form-input" type="email" required placeholder="email@example.com" value={form.email} onChange={e => setForm({...form, email: e.target.value})} /></div>
                 </div>
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+                <div className="form-row-2">
                   <div className="form-group"><label className="form-label">Manuscript Title *</label><input className="form-input" required placeholder="Working title" value={form.title} onChange={e => setForm({...form, title: e.target.value})} /></div>
                   <div className="form-group"><label className="form-label">Language *</label>
                     <select className="form-input form-select" required value={form.language} onChange={e => setForm({...form, language: e.target.value})}>

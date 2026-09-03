@@ -42,7 +42,7 @@ export default function AdminMembershipPage() {
       </div>
 
       <div style={{ background: '#fff', borderRadius: 'var(--radius-lg)', border: '1px solid var(--border)', overflow: 'hidden' }}>
-        <div style={{ overflowX: 'auto' }}>
+        <div className="table-wrap">
           <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '.875rem' }}>
             <thead>
               <tr style={{ background: 'var(--bg-off)' }}>

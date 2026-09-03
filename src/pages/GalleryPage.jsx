@@ -55,7 +55,7 @@ export default function GalleryPage() {
           </div>
 
           {/* Grid */}
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill,minmax(260px,1fr))', gap: '1rem' }}>
+          <div className="gallery-grid">
             {filtered.map(item => (
               <div key={item.id} style={{
                 borderRadius: 'var(--radius-lg)', overflow: 'hidden',

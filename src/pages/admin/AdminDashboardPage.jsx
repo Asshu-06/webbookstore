@@ -35,7 +35,7 @@ export default function AdminDashboardPage() {
       </div>
 
       {/* Stats */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill,minmax(160px,1fr))', gap: '1rem', marginBottom: '1.75rem' }}>
+      <div className="admin-stats-grid" style={{ marginBottom: "1.75rem" }}>
         {STATS.map(s => {
           const Icon = s.icon;
           return (
@@ -58,7 +58,7 @@ export default function AdminDashboardPage() {
         })}
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem' }}>
+      <div className="admin-two-panel">
         {/* Feed */}
         <div style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 'var(--radius-lg)', overflow: 'hidden' }}>
           <div style={{ padding: '1.1rem 1.5rem', borderBottom: '1px solid var(--border)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>

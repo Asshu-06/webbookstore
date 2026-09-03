@@ -14,17 +14,62 @@ const aboutLinks = [
 ];
 
 export default function Navbar() {
-  const [mobileOpen, setMobileOpen]   = useState(false);
-  const [aboutOpen,  setAboutOpen]    = useState(false);
+  const [mobileOpen, setMobileOpen]     = useState(false);
+  const [aboutOpen,  setAboutOpen]      = useState(false);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
-  const dropRef  = useRef(null);
-  const userRef  = useRef(null);
+  const [mobAboutOpen, setMobAboutOpen] = useState(false);
+
+  const dropRef     = useRef(null);
+  const userRef     = useRef(null);
+  const hamburgerRef = useRef(null);
+  const closeRef    = useRef(null);
+  const scrollRef   = useRef(0);
+
   const location = useLocation();
   const isAbout  = location.pathname.startsWith('/about');
 
   const { user, role, signOut } = useAuth();
 
-  // Close dropdowns on outside click
+  // ── Scroll lock helpers ─────────────────────────────────────────────────
+  const openDrawer = () => {
+    scrollRef.current = window.scrollY;
+    document.body.style.overflow   = 'hidden';
+    document.body.style.position   = 'fixed';
+    document.body.style.top        = `-${scrollRef.current}px`;
+    document.body.style.width      = '100%';
+    setMobileOpen(true);
+  };
+
+  const closeDrawer = () => {
+    document.body.style.overflow   = '';
+    document.body.style.position   = '';
+    document.body.style.top        = '';
+    document.body.style.width      = '';
+    window.scrollTo(0, scrollRef.current);
+    setMobileOpen(false);
+  };
+
+  // ── Focus management ────────────────────────────────────────────────────
+  useEffect(() => {
+    if (mobileOpen) {
+      // slight delay so the drawer has rendered
+      const t = setTimeout(() => closeRef.current?.focus(), 50);
+      return () => clearTimeout(t);
+    } else {
+      hamburgerRef.current?.focus();
+    }
+  }, [mobileOpen]);
+
+  // ── Escape key ──────────────────────────────────────────────────────────
+  useEffect(() => {
+    const handler = (e) => {
+      if (e.key === 'Escape' && mobileOpen) closeDrawer();
+    };
+    document.addEventListener('keydown', handler);
+    return () => document.removeEventListener('keydown', handler);
+  }, [mobileOpen]);
+
+  // ── Close desktop dropdowns on outside click ────────────────────────────
   useEffect(() => {
     const handler = (e) => {
       if (dropRef.current && !dropRef.current.contains(e.target)) setAboutOpen(false);
@@ -34,12 +79,20 @@ export default function Navbar() {
     return () => document.removeEventListener('mousedown', handler);
   }, []);
 
-  // Close mobile menu on route change
-  useEffect(() => { setMobileOpen(false); }, [location.pathname]);
+  // ── Close mobile drawer on route change ────────────────────────────────
+  useEffect(() => {
+    if (mobileOpen) closeDrawer();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [location.pathname]);
 
   const handleSignOut = async () => {
     await signOut();
     setUserMenuOpen(false);
+  };
+
+  const handleMobSignOut = async () => {
+    closeDrawer();
+    await signOut();
   };
 
   const initials = user
@@ -48,6 +101,9 @@ export default function Navbar() {
 
   return (
     <>
+      {/* ════════════════════════════════════════════════════
+          DESKTOP NAV  (unchanged)
+      ════════════════════════════════════════════════════ */}
       <nav className="gasfe-nav">
         <div className="nav-container">
           <div className="nav-inner">
@@ -146,57 +202,114 @@ export default function Navbar() {
 
             {/* ── Hamburger ── */}
             <button
+              ref={hamburgerRef}
               className="nav-hamburger"
-              onClick={() => setMobileOpen(!mobileOpen)}
+              onClick={openDrawer}
               aria-label={mobileOpen ? 'Close menu' : 'Open menu'}
+              aria-expanded={mobileOpen}
+              aria-controls="mobile-drawer"
             >
-              {mobileOpen ? <X size={22} /> : <Menu size={22} />}
+              <Menu size={22} />
             </button>
           </div>
         </div>
+      </nav>
 
-        {/* ── Mobile drawer ── */}
-        <div className={'nav-mobile' + (mobileOpen ? ' is-open' : '')}>
-          {[
-            { to: '/',                    label: 'Home' },
-            { to: '/about',               label: 'About Foundation' },
-            { to: '/about/leadership',    label: 'Leadership',        sub: true },
-            { to: '/about/vision-mission',label: 'Vision & Mission',  sub: true },
-            { to: '/about/board',         label: 'Board of Directors',sub: true },
-            { to: '/about/values',        label: 'Our Values',        sub: true },
-            { to: '/activities',          label: 'Activities' },
-            { to: '/gallery',             label: 'Gallery' },
-            { to: '/membership',          label: 'Membership' },
-            { to: '/internship',          label: 'Internship' },
-            { to: '/compliances',         label: 'Compliances' },
-            { to: '/contact',             label: 'Contact' },
-            { to: '/books',               label: 'Our Books' },
-            { to: '/publication',         label: 'Publication' },
-          ].map(l => (
-            <Link
-              key={l.to + l.label}
-              to={l.to}
-              className={'nav-mob-item' + (l.sub ? ' is-sub' : '')}
-            >
-              {l.label}
-            </Link>
-          ))}
-          <div className="nav-mob-divider" />
+      {/* ════════════════════════════════════════════════════
+          MOBILE DRAWER  (outside <nav> to avoid stacking clip)
+      ════════════════════════════════════════════════════ */}
+
+      {/* Overlay */}
+      <div
+        className={'mob-overlay' + (mobileOpen ? ' is-open' : '')}
+        onClick={closeDrawer}
+        aria-hidden="true"
+      />
+
+      {/* Drawer */}
+      <div
+        id="mobile-drawer"
+        role="dialog"
+        aria-modal="true"
+        aria-label="Navigation menu"
+        className={'mob-drawer' + (mobileOpen ? ' is-open' : '')}
+      >
+        {/* Drawer header */}
+        <div className="mob-drawer-header">
+          <Link to="/" className="mob-drawer-logo" onClick={closeDrawer}>
+            <div className="mob-drawer-logo-icon">
+              <BookOpen size={17} color="#fff" />
+            </div>
+            <span className="mob-drawer-logo-name">Gyan Akshar</span>
+          </Link>
+          <button
+            ref={closeRef}
+            className="mob-drawer-close"
+            onClick={closeDrawer}
+            aria-label="Close menu"
+          >
+            <X size={20} />
+          </button>
+        </div>
+
+        {/* Scrollable nav list */}
+        <nav className="mob-drawer-nav">
+
+          <Link to="/" className="mob-nav-item" onClick={closeDrawer}>Home</Link>
+
+          {/* About accordion */}
+          <button
+            className={'mob-nav-item mob-nav-accordion' + (mobAboutOpen ? ' is-expanded' : '')}
+            onClick={() => setMobAboutOpen(!mobAboutOpen)}
+            aria-expanded={mobAboutOpen}
+          >
+            About Us
+            <ChevronDown size={16} className={'mob-acc-chevron' + (mobAboutOpen ? ' rotated' : '')} />
+          </button>
+          <div className={'mob-acc-panel' + (mobAboutOpen ? ' is-open' : '')}>
+            {aboutLinks.map(l => (
+              <Link key={l.to} to={l.to} className="mob-nav-item mob-nav-sub" onClick={closeDrawer}>
+                {l.label}
+              </Link>
+            ))}
+          </div>
+
+          <Link to="/activities"  className="mob-nav-item" onClick={closeDrawer}>Activities</Link>
+          <Link to="/gallery"     className="mob-nav-item" onClick={closeDrawer}>Gallery</Link>
+          <Link to="/membership"  className="mob-nav-item" onClick={closeDrawer}>Membership</Link>
+          <Link to="/internship"  className="mob-nav-item" onClick={closeDrawer}>Internship</Link>
+          <Link to="/compliances" className="mob-nav-item" onClick={closeDrawer}>Compliances</Link>
+          <Link to="/contact"     className="mob-nav-item" onClick={closeDrawer}>Contact</Link>
+          <Link to="/books"       className="mob-nav-item" onClick={closeDrawer}>Our Books</Link>
+          <Link to="/publication" className="mob-nav-item" onClick={closeDrawer}>Publication</Link>
+
+          <div className="mob-nav-divider" />
+
           {user ? (
             <>
-              <Link to={role === 'ADMIN' ? '/admin/dashboard' : '/author/dashboard'} className="nav-mob-item">
+              <Link
+                to={role === 'ADMIN' ? '/admin/dashboard' : '/author/dashboard'}
+                className="mob-nav-item"
+                onClick={closeDrawer}
+              >
                 {role === 'ADMIN' ? 'Admin Dashboard' : 'Author Dashboard'}
               </Link>
-              <button onClick={handleSignOut} className="nav-mob-item nav-mob-signout">Sign Out</button>
+              <button onClick={handleMobSignOut} className="mob-nav-item mob-nav-signout">
+                Sign Out
+              </button>
             </>
           ) : (
             <>
-              <Link to="/author/login" className="nav-mob-item">Sign In (Author)</Link>
-              <Link to="/admin/login"  className="nav-mob-item">Admin Login</Link>
+              <Link to="/author/login" className="mob-nav-item" onClick={closeDrawer}>
+                Sign In (Author)
+              </Link>
+              <Link to="/admin/login" className="mob-nav-item" onClick={closeDrawer}>
+                Admin Login
+              </Link>
             </>
           )}
-        </div>
-      </nav>
+        </nav>
+      </div>
 
       <style>{`
         /* ─── Container ──────────────────────────────── */
@@ -252,10 +365,9 @@ export default function Navbar() {
         .nav-links {
           display: flex;
           align-items: center;
-          flex: 1 1 auto;          /* grow to fill space */
+          flex: 1 1 auto;
           min-width: 0;
           gap: 0;
-          /* allow shrinking */
         }
         .nav-item {
           display: inline-flex; align-items: center; gap: 2px;
@@ -316,7 +428,6 @@ export default function Navbar() {
           flex-shrink: 0;
           margin-left: 10px;
         }
-        /* Hide "Our Books" text at tight widths — show icon only */
         .nav-btn-ghost {
           display: inline-flex; align-items: center; gap: 5px;
           padding: 5px 10px;
@@ -404,41 +515,156 @@ export default function Navbar() {
         }
         .nav-hamburger:hover { background: rgba(255,255,255,.1); }
 
-        /* ─── Mobile drawer ───────────────────────────── */
-        .nav-mobile {
+        /* ═══════════════════════════════════════════════
+           MOBILE DRAWER
+        ═══════════════════════════════════════════════ */
+
+        /* Overlay */
+        .mob-overlay {
           display: none;
-          max-height: 0; overflow: hidden;
+          position: fixed; inset: 0;
+          background: rgba(0,0,0,0.45);
+          z-index: 1100;
+          opacity: 0;
+          transition: opacity 300ms ease;
+        }
+        .mob-overlay.is-open {
+          opacity: 1;
+        }
+
+        /* Drawer panel */
+        .mob-drawer {
+          display: none;
+          position: fixed;
+          right: 0; top: 0;
+          height: 100dvh;
+          width: min(85vw, 360px);
+          max-width: 100vw;
           background: #0F1D29;
-          border-top: 1px solid rgba(255,255,255,.07);
-          transition: max-height .28s ease;
+          z-index: 1200;
+          transform: translateX(100%);
+          transition: transform 300ms cubic-bezier(0.32, 0.72, 0, 1);
+          flex-direction: column;
+          overflow: hidden;
         }
-        .nav-mobile.is-open { max-height: 90vh; overflow-y: auto; display: block; }
-        .nav-mob-item {
-          display: block; padding: 11px 20px;
-          color: rgba(255,255,255,.78); font-size: 14px; font-weight: 500;
+        .mob-drawer.is-open {
+          transform: translateX(0);
+        }
+
+        /* Drawer header */
+        .mob-drawer-header {
+          display: flex; align-items: center; justify-content: space-between;
+          padding: 0 16px;
+          height: 60px; flex-shrink: 0;
+          border-bottom: 1px solid rgba(255,255,255,.1);
+        }
+        .mob-drawer-logo {
+          display: flex; align-items: center; gap: 8px;
           text-decoration: none;
-          border-bottom: 1px solid rgba(255,255,255,.04);
+        }
+        .mob-drawer-logo-icon {
+          width: 32px; height: 32px; flex-shrink: 0;
+          background: #B8864B; border-radius: 6px;
+          display: flex; align-items: center; justify-content: center;
+        }
+        .mob-drawer-logo-name {
+          color: #fff;
+          font-family: 'Playfair Display', Georgia, serif;
+          font-weight: 700; font-size: 14px;
+        }
+        .mob-drawer-close {
+          display: flex; align-items: center; justify-content: center;
+          min-width: 44px; min-height: 44px;
+          background: none; border: none;
+          color: rgba(255,255,255,.7);
+          border-radius: 8px; cursor: pointer; flex-shrink: 0;
+          transition: background .15s, color .15s;
+        }
+        .mob-drawer-close:hover {
+          background: rgba(255,255,255,.1); color: #fff;
+        }
+
+        /* Drawer nav (scrollable) */
+        .mob-drawer-nav {
+          flex: 1 1 auto;
+          overflow-y: auto;
+          padding: 8px 0 24px;
+          -webkit-overflow-scrolling: touch;
+        }
+
+        /* Nav items */
+        .mob-nav-item {
+          display: flex; align-items: center;
+          min-height: 44px;
+          padding: 0 20px;
+          color: rgba(255,255,255,.78);
+          font-size: 14px; font-weight: 500;
+          text-decoration: none;
+          border: none; background: none;
+          width: 100%; text-align: left;
+          cursor: pointer; font-family: inherit;
           transition: background .12s, color .12s;
-          background: none; border: none; width: 100%;
-          text-align: left; cursor: pointer; font-family: inherit;
+          box-sizing: border-box;
         }
-        .nav-mob-item.is-sub {
-          padding-left: 36px; color: rgba(255,255,255,.5); font-size: 13px;
+        .mob-nav-item:hover {
+          background: rgba(255,255,255,.06); color: #fff;
         }
-        .nav-mob-item:hover { background: rgba(255,255,255,.06); color: #fff; }
-        .nav-mob-divider { height: 1px; background: rgba(255,255,255,.1); margin: 6px 0; }
-        .nav-mob-signout { color: #fca5a5; }
+        .mob-nav-sub {
+          padding-left: 36px;
+          color: rgba(255,255,255,.5);
+          font-size: 13px;
+        }
+        .mob-nav-sub:hover {
+          color: rgba(255,255,255,.85);
+        }
+
+        /* About accordion toggle */
+        .mob-nav-accordion {
+          justify-content: space-between;
+        }
+        .mob-acc-chevron {
+          transition: transform 250ms ease;
+          flex-shrink: 0;
+          color: rgba(255,255,255,.45);
+        }
+        .mob-acc-chevron.rotated {
+          transform: rotate(180deg);
+        }
+
+        /* Accordion panel */
+        .mob-acc-panel {
+          max-height: 0;
+          overflow: hidden;
+          transition: max-height 280ms ease;
+        }
+        .mob-acc-panel.is-open {
+          /* 7 items × ~44px each + some buffer */
+          max-height: 400px;
+        }
+
+        /* Divider */
+        .mob-nav-divider {
+          height: 1px;
+          background: rgba(255,255,255,.1);
+          margin: 8px 0;
+        }
+
+        /* Sign out */
+        .mob-nav-signout {
+          color: #fca5a5;
+        }
+        .mob-nav-signout:hover {
+          background: rgba(239,68,68,.08); color: #f87171;
+        }
 
         /* ─── Breakpoints ─────────────────────────────── */
 
-        /* 1280px: slightly tighter */
         @media (max-width: 1280px) {
           .nav-item { padding: 5px 6px; font-size: 12px; }
           .nav-logo  { margin-right: 10px; }
           .nav-right { gap: 4px; margin-left: 8px; }
         }
 
-        /* 1100px: hide "Our Books" label, show icon only — hide Admin btn */
         @media (max-width: 1100px) {
           .nav-item   { padding: 5px 5px; font-size: 11.5px; }
           .nav-books-label { display: none; }
@@ -448,13 +674,15 @@ export default function Navbar() {
           .nav-right { gap: 3px; margin-left: 6px; }
         }
 
-        /* 900px: hide everything except logo + hamburger */
+        /* 900px: hide desktop links, show hamburger + drawer */
         @media (max-width: 900px) {
           .nav-links  { display: none !important; }
           .nav-right  { display: none !important; }
           .nav-hamburger { display: flex !important; }
-          .nav-mobile    { display: block; }
           .nav-logo  { margin-right: 0; }
+
+          .mob-overlay { display: block; }
+          .mob-drawer  { display: flex; }
         }
 
         @media (max-width: 480px) {
@@ -462,8 +690,7 @@ export default function Navbar() {
           .nav-logo-sub { display: none; }
           .nav-logo-name { font-size: 13px; }
         }
-
-            `}</style>
+      `}</style>
     </>
   );
 }

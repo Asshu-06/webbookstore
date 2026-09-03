@@ -35,7 +35,7 @@ export default function ActivitiesPage() {
 
           <p style={{ color: 'var(--text-muted)', fontSize: '.875rem', marginBottom: '1.5rem' }}>{filtered.length} {filtered.length === 1 ? 'activity' : 'activities'} found</p>
 
-          <div className="grid-3">
+          <div className="activities-grid">
             {filtered.map(a => (
               <div key={a.id} className="card">
                 <div style={{ height: 180, background: a.coverColor, display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative' }}>

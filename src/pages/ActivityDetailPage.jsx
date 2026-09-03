@@ -55,7 +55,7 @@ export default function ActivityDetailPage() {
           {/* Photo gallery placeholder */}
           <div style={{ marginTop: '2.5rem' }}>
             <h3 style={{ fontFamily: 'var(--font-serif)', fontWeight: 700, color: 'var(--primary)', marginBottom: '1.25rem', fontSize: '1.3rem' }}>Photo Gallery</h3>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1rem' }}>
+            <div className="activities-grid">
               {[1,2,3,4,5,6].map(i => (
                 <div key={i} style={{ aspectRatio: '4/3', background: activity.coverColor + (i % 2 === 0 ? 'cc' : '99'), borderRadius: 'var(--radius)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                   <BookOpen size={28} color="rgba(255,255,255,.4)" />
