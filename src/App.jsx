@@ -3,6 +3,7 @@ import { AuthProvider } from './context/AuthContext'
 import Layout from './components/Layout'
 import AdminLayout from './components/AdminLayout'
 import ProtectedRoute from './components/ProtectedRoute'
+import ScrollToTop from './components/ScrollToTop'
 
 import HomePage from './pages/HomePage'
 import AboutPage from './pages/AboutPage'
@@ -33,7 +34,11 @@ export default function App() {
   return (
     <AuthProvider>
       <BrowserRouter>
+        {/* Global scroll-to-top on every route change (respects #anchors) */}
+        <ScrollToTop />
+
         <Routes>
+          {/* ── Public website ── */}
           <Route element={<Layout />}>
             <Route path="/" element={<HomePage />} />
             <Route path="/about" element={<AboutPage />} />
@@ -55,6 +60,7 @@ export default function App() {
             <Route path="*" element={<NotFoundPage />} />
           </Route>
 
+          {/* ── Author portal ── */}
           <Route path="/author/login" element={<AuthorLoginPage />} />
           <Route
             path="/author/dashboard"
@@ -65,6 +71,7 @@ export default function App() {
             }
           />
 
+          {/* ── Admin portal ── */}
           <Route path="/admin/login" element={<AdminLoginPage />} />
           <Route
             path="/admin"
