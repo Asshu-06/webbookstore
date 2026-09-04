@@ -1,14 +1,36 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Calendar, ArrowRight, BookOpen, Filter } from 'lucide-react';
-import { ACTIVITIES } from '../data';
+import { supabase } from '../lib/supabase';
 
 const CATEGORIES = ['All', 'Education & Learning', 'Research & Innovation', 'Books & Literature', 'Social & Community Outreach', 'Training & Professional Development'];
 
 export default function ActivitiesPage() {
   const [active, setActive] = useState('All');
+  const [activities, setActivities] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  const filtered = active === 'All' ? ACTIVITIES : ACTIVITIES.filter(a => a.category === active);
+  useEffect(() => {
+    fetchActivities();
+  }, []);
+
+  const fetchActivities = async () => {
+    setLoading(true);
+    const { data, error } = await supabase
+      .from('activities')
+      .select('*')
+      .eq('status', 'Published')
+      .order('date', { ascending: false });
+    
+    if (error) {
+      console.error('Error fetching activities:', error);
+    } else {
+      setActivities(data || []);
+    }
+    setLoading(false);
+  };
+
+  const filtered = active === 'All' ? activities : activities.filter(a => a.category === active);
 
   return (
     <div>
@@ -33,9 +55,16 @@ export default function ActivitiesPage() {
             ))}
           </div>
 
-          <p style={{ color: 'var(--text-muted)', fontSize: '.875rem', marginBottom: '1.5rem' }}>{filtered.length} {filtered.length === 1 ? 'activity' : 'activities'} found</p>
+          <p style={{ color: 'var(--text-muted)', fontSize: '.875rem', marginBottom: '1.5rem' }}>
+            {loading ? 'Loading activities...' : `${filtered.length} ${filtered.length === 1 ? 'activity' : 'activities'} found`}
+          </p>
 
-          <div className="activities-grid">
+          {loading ? (
+            <div style={{ textAlign: 'center', padding: '3rem', color: 'var(--text-muted)' }}>Loading activities...</div>
+          ) : filtered.length === 0 ? (
+            <div style={{ textAlign: 'center', padding: '3rem', color: 'var(--text-muted)' }}>No activities found.</div>
+          ) : (
+            <div className="activities-grid">
             {filtered.map(a => (
               <div key={a.id} className="card">
                 <div style={{ height: 180, background: a.coverColor, display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative' }}>
@@ -56,6 +85,7 @@ export default function ActivitiesPage() {
               </div>
             ))}
           </div>
+          )}
         </div>
       </section>
     </div>

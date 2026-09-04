@@ -202,6 +202,7 @@ export default function Navbar() {
 
             {/* ── Hamburger ── */}
             <button
+              type="button"
               ref={hamburgerRef}
               className="nav-hamburger"
               onClick={openDrawer}
@@ -243,6 +244,7 @@ export default function Navbar() {
             <span className="mob-drawer-logo-name">Gyan Akshar</span>
           </Link>
           <button
+            type="button"
             ref={closeRef}
             className="mob-drawer-close"
             onClick={closeDrawer}
@@ -259,6 +261,7 @@ export default function Navbar() {
 
           {/* About accordion */}
           <button
+            type="button"
             className={'mob-nav-item mob-nav-accordion' + (mobAboutOpen ? ' is-expanded' : '')}
             onClick={() => setMobAboutOpen(!mobAboutOpen)}
             aria-expanded={mobAboutOpen}
@@ -294,7 +297,7 @@ export default function Navbar() {
               >
                 {role === 'ADMIN' ? 'Admin Dashboard' : 'Author Dashboard'}
               </Link>
-              <button onClick={handleMobSignOut} className="mob-nav-item mob-nav-signout">
+              <button onClick={handleMobSignOut} type="button" className="mob-nav-item mob-nav-signout">
                 Sign Out
               </button>
             </>
@@ -526,23 +529,25 @@ export default function Navbar() {
           background: rgba(0,0,0,0.45);
           z-index: 1100;
           opacity: 0;
+          pointer-events: none;
           transition: opacity 300ms ease;
         }
         .mob-overlay.is-open {
           opacity: 1;
+          pointer-events: auto;
         }
 
         /* Drawer panel */
         .mob-drawer {
           display: none;
           position: fixed;
-          right: 0; top: 0;
+          left: 0; top: 0;
           height: 100dvh;
           width: min(85vw, 360px);
           max-width: 100vw;
           background: #0F1D29;
           z-index: 1200;
-          transform: translateX(100%);
+          transform: translateX(-100%);
           transition: transform 300ms cubic-bezier(0.32, 0.72, 0, 1);
           flex-direction: column;
           overflow: hidden;

@@ -26,6 +26,8 @@ import AdminDashboardPage from './pages/admin/AdminDashboardPage'
 import AdminBooksPage from './pages/admin/AdminBooksPage'
 import AdminAuthorsPage from './pages/admin/AdminAuthorsPage'
 import AdminActivitiesPage from './pages/admin/AdminActivitiesPage'
+import AdminGalleryPage from './pages/admin/AdminGalleryPage'
+import AdminCompliancePage from './pages/admin/AdminCompliancePage'
 import AdminMembershipPage from './pages/admin/AdminMembershipPage'
 import AdminInternshipPage from './pages/admin/AdminInternshipPage'
 import AdminEnquiriesPage from './pages/admin/AdminEnquiriesPage'
@@ -73,19 +75,14 @@ export default function App() {
 
           {/* ── Admin portal ── */}
           <Route path="/admin/login" element={<AdminLoginPage />} />
-          <Route
-            path="/admin"
-            element={
-              <ProtectedRoute allowedRoles={['ADMIN']} redirectTo="/admin/login">
-                <AdminLayout />
-              </ProtectedRoute>
-            }
-          >
+          <Route path="/admin" element={<AdminLayout />}>
             <Route index element={<AdminDashboardPage />} />
             <Route path="dashboard" element={<AdminDashboardPage />} />
             <Route path="books" element={<AdminBooksPage />} />
             <Route path="authors" element={<AdminAuthorsPage />} />
             <Route path="activities" element={<AdminActivitiesPage />} />
+            <Route path="gallery" element={<AdminGalleryPage />} />
+            <Route path="compliances" element={<AdminCompliancePage />} />
             <Route path="membership" element={<AdminMembershipPage />} />
             <Route path="internship" element={<AdminInternshipPage />} />
             <Route path="enquiries" element={<AdminEnquiriesPage />} />

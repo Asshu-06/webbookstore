@@ -1,14 +1,36 @@
 import { BookOpen, ExternalLink, Search } from 'lucide-react';
-import { useState } from 'react';
-import { BOOKS } from '../data';
+import { useState, useEffect } from 'react';
+import { supabase } from '../lib/supabase';
 
 const GENRES = ['All', 'Literary Fiction', 'Biography', 'Poetry', 'Non-Fiction', 'Historical Fiction', 'Folklore'];
 
 export default function BooksPage() {
   const [genre, setGenre] = useState('All');
   const [search, setSearch] = useState('');
+  const [books, setBooks] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  const filtered = BOOKS.filter(b =>
+  useEffect(() => {
+    fetchBooks();
+  }, []);
+
+  const fetchBooks = async () => {
+    setLoading(true);
+    const { data, error } = await supabase
+      .from('books')
+      .select('*')
+      .eq('status', 'Published')
+      .order('year', { ascending: false });
+    
+    if (error) {
+      console.error('Error fetching books:', error);
+    } else {
+      setBooks(data || []);
+    }
+    setLoading(false);
+  };
+
+  const filtered = books.filter(b =>
     (genre === 'All' || b.genre === genre) &&
     (search === '' || b.title.toLowerCase().includes(search.toLowerCase()) || b.author.toLowerCase().includes(search.toLowerCase()))
   );
@@ -40,9 +62,16 @@ export default function BooksPage() {
             </div>
           </div>
 
-          <p style={{ color: 'var(--text-muted)', fontSize: '.875rem', marginBottom: '1.5rem' }}>{filtered.length} books found</p>
+          <p style={{ color: 'var(--text-muted)', fontSize: '.875rem', marginBottom: '1.5rem' }}>
+            {loading ? 'Loading books...' : `${filtered.length} books found`}
+          </p>
 
-          <div className="books-grid">
+          {loading ? (
+            <div style={{ textAlign: 'center', padding: '3rem', color: 'var(--text-muted)' }}>Loading books...</div>
+          ) : filtered.length === 0 ? (
+            <div style={{ textAlign: 'center', padding: '3rem', color: 'var(--text-muted)' }}>No books found matching your search.</div>
+          ) : (
+            <div className="books-grid">
             {filtered.map(book => (
               <div key={book.id} className="card">
                 {/* Book cover */}
@@ -70,6 +99,7 @@ export default function BooksPage() {
               </div>
             ))}
           </div>
+          )}
         </div>
       </section>
     </div>

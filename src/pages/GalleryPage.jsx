@@ -1,6 +1,6 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Image } from 'lucide-react';
-import { GALLERY_ITEMS } from '../data';
+import { supabase } from '../lib/supabase';
 
 const CATS = ['All', 'Events', 'Book Launches', 'Media Coverage'];
 const YEARS = ['All', '2024', '2023'];
@@ -8,8 +8,30 @@ const YEARS = ['All', '2024', '2023'];
 export default function GalleryPage() {
   const [cat, setCat] = useState('All');
   const [year, setYear] = useState('All');
+  const [items, setItems] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  const filtered = GALLERY_ITEMS.filter(item =>
+  useEffect(() => {
+    fetchGalleryItems();
+  }, []);
+
+  const fetchGalleryItems = async () => {
+    setLoading(true);
+    const { data, error } = await supabase
+      .from('gallery_items')
+      .select('*')
+      .eq('status', 'Published')
+      .order('year', { ascending: false });
+    
+    if (error) {
+      console.error('Error fetching gallery items:', error);
+    } else {
+      setItems(data || []);
+    }
+    setLoading(false);
+  };
+
+  const filtered = items.filter(item =>
     (cat === 'All' || item.category === cat) &&
     (year === 'All' || item.year.toString() === year)
   );
@@ -51,30 +73,38 @@ export default function GalleryPage() {
                 }}>{y}</button>
               ))}
             </div>
-            <span style={{ marginLeft: 'auto', fontSize: '.78rem', color: 'var(--muted)' }}>{filtered.length} items</span>
+            <span style={{ marginLeft: 'auto', fontSize: '.78rem', color: 'var(--muted)' }}>
+              {loading ? 'Loading...' : `${filtered.length} items`}
+            </span>
           </div>
 
           {/* Grid */}
-          <div className="gallery-grid">
-            {filtered.map(item => (
-              <div key={item.id} style={{
-                borderRadius: 'var(--radius-lg)', overflow: 'hidden',
-                cursor: 'pointer', position: 'relative', aspectRatio: '4/3',
-                background: item.color, boxShadow: 'var(--shadow-sm)',
-                transition: 'transform .2s, box-shadow .2s',
-              }}
-                onMouseEnter={e => { e.currentTarget.style.transform = 'scale(1.025)'; e.currentTarget.style.boxShadow = 'var(--shadow-lg)'; }}
-                onMouseLeave={e => { e.currentTarget.style.transform = ''; e.currentTarget.style.boxShadow = 'var(--shadow-sm)'; }}>
-                <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                  <Image size={34} color="rgba(255,255,255,.25)" />
+          {loading ? (
+            <div style={{ textAlign: 'center', padding: '3rem', color: 'var(--text-muted)' }}>Loading gallery...</div>
+          ) : filtered.length === 0 ? (
+            <div style={{ textAlign: 'center', padding: '3rem', color: 'var(--text-muted)' }}>No gallery items found.</div>
+          ) : (
+            <div className="gallery-grid">
+              {filtered.map(item => (
+                <div key={item.id} style={{
+                  borderRadius: 'var(--radius-lg)', overflow: 'hidden',
+                  cursor: 'pointer', position: 'relative', aspectRatio: '4/3',
+                  background: item.color, boxShadow: 'var(--shadow-sm)',
+                  transition: 'transform .2s, box-shadow .2s',
+                }}
+                  onMouseEnter={e => { e.currentTarget.style.transform = 'scale(1.025)'; e.currentTarget.style.boxShadow = 'var(--shadow-lg)'; }}
+                  onMouseLeave={e => { e.currentTarget.style.transform = ''; e.currentTarget.style.boxShadow = 'var(--shadow-sm)'; }}>
+                  <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                    <Image size={34} color="rgba(255,255,255,.25)" />
+                  </div>
+                  <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, background: 'linear-gradient(transparent,rgba(0,0,0,.72))', padding: '2rem 1rem .9rem' }}>
+                    <p style={{ color: '#fff', fontSize: '.84rem', fontWeight: 600, lineHeight: 1.3 }}>{item.title}</p>
+                    <p style={{ color: 'rgba(255,255,255,.6)', fontSize: '.72rem', marginTop: '.2rem' }}>{item.category} &bull; {item.year}</p>
+                  </div>
                 </div>
-                <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, background: 'linear-gradient(transparent,rgba(0,0,0,.72))', padding: '2rem 1rem .9rem' }}>
-                  <p style={{ color: '#fff', fontSize: '.84rem', fontWeight: 600, lineHeight: 1.3 }}>{item.title}</p>
-                  <p style={{ color: 'rgba(255,255,255,.6)', fontSize: '.72rem', marginTop: '.2rem' }}>{item.category} &bull; {item.year}</p>
-                </div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          )}
         </div>
       </section>
     </div>
