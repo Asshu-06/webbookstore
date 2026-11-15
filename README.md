@@ -1,75 +1,155 @@
-# React + TypeScript + Vite
+# 📚 Web Bookstore
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+### A Modern Online Bookstore
 
-Currently, two official plugins are available:
+Web Bookstore is a responsive online bookstore application built using **React.js, TypeScript, and Supabase**. It aims to provide users with a convenient digital platform to explore books and enjoy an accessible online bookstore experience.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## 🌟 Project Overview
 
-## React Compiler
+The application uses a modern frontend architecture with Supabase integration for backend services and database management.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+It is deployed on Vercel, making the application accessible online.
 
-## Expanding the ESLint configuration
+## ✨ Key Features
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+- 📚 Online bookstore interface.
+- 🔍 Book discovery and browsing experience.
+- 👤 User authentication integration.
+- 🗄️ Supabase backend and database integration.
+- 🔐 Admin setup and management configuration.
+- 📱 Responsive web application design.
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+*Feature descriptions should be retained only if they are implemented and working in the current application.*
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+## 🛠️ Tech Stack
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+| Technology | Purpose |
+|---|---|
+| React.js | Frontend development |
+| TypeScript | Type-safe development |
+| Vite | Development and build tooling |
+| Supabase | Backend and database services |
+| React Router | Application routing |
+| Lucide React | Icons |
+| Vercel | Deployment |
 
+## 🏗️ Application Architecture
+
+```text
+        User
+          |
+          v
+    React Application
+          |
+          v
+    React Router
+          |
+          v
+    Supabase Client
+          |
+          v
+       Supabase
+       /      \
+ Authentication Database
+          |
+          v
+    Application Data
 ```
 
-You can also install [eslint-plugin-react-x](https://npmx.dev/package/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://npmx.dev/package/eslint-plugin-react-dom) for React-specific lint rules:
+## 🚀 Live Demo
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+Explore the deployed application:
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+**[Web Bookstore – Live Website](https://webbookstore.vercel.app/)**
 
+## ⚙️ Installation and Setup
+
+### Prerequisites
+
+- Node.js
+- npm
+- Supabase account
+
+### 1. Clone the repository
+
+```bash
+git clone https://github.com/Asshu-06/webbookstore.git
 ```
+
+### 2. Navigate to the project
+
+```bash
+cd webbookstore
+```
+
+### 3. Install dependencies
+
+```bash
+npm install
+```
+
+### 4. Configure environment variables
+
+Create a `.env` file in the project root.
+
+```env
+VITE_SUPABASE_URL=your_supabase_project_url
+VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
+```
+
+Use your own Supabase project credentials. Never expose service-role keys or other secrets in frontend code.
+
+### 5. Run the application
+
+```bash
+npm run dev
+```
+
+Open the local development URL displayed in your terminal.
+
+### 6. Build for production
+
+```bash
+npm run build
+```
+
+## 📁 Project Structure
+
+```text
+webbookstore/
+│
+├── public/
+├── scripts/
+├── src/
+├── .env.example
+├── .gitignore
+├── package.json
+├── vite.config.js
+├── supabase-setup.sql
+├── supabase-setup-simple.sql
+└── README.md
+```
+
+## 🔒 Security Considerations
+
+- Configure appropriate Supabase Row Level Security policies.
+- Restrict administrative access to authorized users.
+- Keep sensitive credentials outside the source code.
+- Validate permissions for database operations.
+
+## 🎯 Project Objective
+
+The objective of this project is to develop a modern online bookstore while gaining practical experience in React, TypeScript, backend integration, database management, authentication, and deployment.
+
+## 👩‍💻 Developer
+
+**Aswani Adduri**
+
+B.Tech Computer Science & Engineering | 2027
+
+- GitHub: [Asshu-06](https://github.com/Asshu-06)
+- LinkedIn: [Connect with me](https://www.linkedin.com/in/aswani-adduri-442149328/)
+
+---
+
+⭐ If you find this project interesting, feel free to explore the repository!
